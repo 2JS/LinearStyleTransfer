@@ -44,12 +44,12 @@ content_dataset = Dataset(opt.contentPath,opt.loadSize,opt.fineSize,test=True)
 content_loader = torch.utils.data.DataLoader(dataset=content_dataset,
                                              batch_size = opt.batchSize,
                                              shuffle = False,
-                                             num_workers = 1)
+                                             num_workers = 0)
 style_dataset = Dataset(opt.stylePath,opt.loadSize,opt.fineSize,test=True)
 style_loader = torch.utils.data.DataLoader(dataset=style_dataset,
                                            batch_size = opt.batchSize,
                                            shuffle = False,
-                                           num_workers = 1)
+                                           num_workers = 0)
 
 ################# MODEL #################
 if(opt.layer == 'r31'):
@@ -61,7 +61,7 @@ elif(opt.layer == 'r41'):
 matrix = MulLayer(opt.layer)
 vgg.load_state_dict(torch.load(opt.vgg_dir))
 dec.load_state_dict(torch.load(opt.decoder_dir))
-matrix.load_state_dict(torch.load(opt.matrixPath))
+matrix.load_state_dict(torch.load(opt.matrixPath, map_location=torch.device('cpu')))
 
 ################# GLOBAL VARIABLE #################
 contentV = torch.Tensor(opt.batchSize,3,opt.fineSize,opt.fineSize)
